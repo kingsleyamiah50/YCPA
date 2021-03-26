@@ -1,3 +1,6 @@
+clearvars
+clearvars -GLOBAL
+close all
 winstyle = 'docked';
 % winstyle = 'normal';
 
@@ -26,21 +29,31 @@ c_mu_0 = 1.2566370614e-6;         % vacuum permeability
 c_eta_0 = sqrt(c_mu_0/c_eps_0);
 
 
-tSim = 200e-15
-f = 230e12;
-lambda = c_c/f;
+tSim = 200e-15                     % Simulation time
+f = 200e12;                        % Frequency
+lambda = c_c/f;                    % wavelength
 
+
+% Region setup
 xMax{1} = 20e-6;
 nx{1} = 200;
 ny{1} = 0.75*nx{1};
 
-
+% Number of regions
 Reg.n = 1;
 
+% Permitivity and Permeability
 mu{1} = ones(nx{1},ny{1})*c_mu_0;
 
+% Inclusions
 epi{1} = ones(nx{1},ny{1})*c_eps_0;
+
+% My inclusions
 epi{1}(125:150,55:95)= c_eps_0*11.3;
+epi{1}(50:150,120:125) = c_eps_0*11.3;
+epi{1}(50:150,110:115) = c_eps_0*11.3;
+epi{1}(50:150,30:35) = c_eps_0*11.3;
+epi{1}(50:150,40:45) = c_eps_0*11.3;
 
 sigma{1} = zeros(nx{1},ny{1});
 sigmaH{1} = zeros(nx{1},ny{1});
@@ -61,6 +74,7 @@ Plot.MaxH = Plot.MaxEz/c_eta_0;
 Plot.pv = [0 0 90];
 Plot.reglim = [0 xMax{1} 0 yMax];
 
+% Boundary Conditions
 
 bc{1}.NumS = 1;
 bc{1}.s(1).xpos = nx{1}/(4) + 1;
@@ -72,7 +86,7 @@ phi = 0;
 omega = f*2*pi;
 betap = 0;
 t0 = 30e-15;
-st = 15e-15;
+st = -0.05;
 s = 0;
 y0 = yMax/2;
 sty = 1.5*lambda;
@@ -81,7 +95,7 @@ bc{1}.s(1).paras = {mag,phi,omega,betap,t0,st,s,y0,sty,'s'};
 Plot.y0 = round(y0/dx);
 
 bc{1}.xm.type = 'a';
-bc{1}.xp.type = 'a';
+bc{1}.xp.type = 'c';
 bc{1}.ym.type = 'a';
 bc{1}.yp.type = 'a';
 
